@@ -41,6 +41,16 @@ const init = () => {
   ambientLight.position.set(3, 2, 1);
   sceen.add(ambientLight);
   renderer.render(sceen, camera);
+
+  const handleResize = () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.render(sceen, camera);
+  };
+
+  window.addEventListener("resize", handleResize);
 };
 
 window.addEventListener("load", () => {
