@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const init = () => {
   const renderer = new THREE.WebGLRenderer({
@@ -17,6 +18,24 @@ const init = () => {
     1,
     500
   );
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+
+  controls.autoRotate = true;
+  // controls.autoRotateSpeed = 30;
+  controls.enableDamping = true; // 화면에서 스크롤 시 관성 여부
+  // controls.dampingFactor = 0.01; // 관성의 유지 정도
+  controls.enableZoom = true; // 카메라 줌 여부
+  // controls.maxDistance = 50; // 카메라 최대 확대
+  // controls.minDistance = 10; // 카메라 최소 확대
+  controls.maxAzimuthAngle = Math.PI / 2; // 카메라 회전 크기\
+  controls.minAzimuthAngle = Math.PI / 3;
+
+  controls.enablePan = true; // 우클릭 카메라 전환 여부
+
+  // const axesHelper = new THREE.AxesHelper(5);
+
+  // sceen.add(axesHelper);
 
   const cubeGeometry = new THREE.IcosahedronGeometry(1);
   // 조명에 영향을 받는 메쉬
@@ -54,14 +73,14 @@ const init = () => {
   const render = () => {
     const elapsedTime = clock.getElapsedTime();
 
-    cube.rotation.x = elapsedTime; // x 축 방향으로 돌리는 것 단위는 라디안
-    cube.rotation.y = elapsedTime;
+    // cube.rotation.x = elapsedTime; // x 축 방향으로 돌리는 것 단위는 라디안
+    // cube.rotation.y = elapsedTime;
 
-    skeleton.rotation.x = elapsedTime * 1.5;
-    skeleton.rotation.y = elapsedTime * 1.5;
+    // skeleton.rotation.x = elapsedTime * 1.5;
+    // skeleton.rotation.y = elapsedTime * 1.5;
     // cube.position.y = Math.sin(cube.rotation.x);
     // cube.scale.x = Math.cos(cube.rotation.x);
-
+    controls.update();
     renderer.render(sceen, camera);
     requestAnimationFrame(render);
   };
@@ -71,7 +90,7 @@ const init = () => {
   const handleResize = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
+    controls.update();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.render(sceen, camera);
   };
