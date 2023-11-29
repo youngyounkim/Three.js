@@ -18,33 +18,47 @@ const init = () => {
     500
   );
 
-  const geometry = new THREE.BoxGeometry(2, 2, 2);
+  const cubeGeometry = new THREE.IcosahedronGeometry(1);
   // 조명에 영향을 받는 메쉬
-  const material = new THREE.MeshStandardMaterial({ color: 0xcc99ff });
+  const cubeMaterial = new THREE.MeshLambertMaterial({
+    color: 0x00ffff,
+    emissive: 0x111111,
+  });
 
-  const cube = new THREE.Mesh(geometry, material);
+  const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
-  sceen.add(cube);
+  const skeletonGeometry = new THREE.IcosahedronGeometry(2);
+  const skeletonMetaerial = new THREE.MeshBasicMaterial({
+    wireframe: true,
+    transparent: true,
+    opacity: 0.2,
+    color: 0xaaaaaa,
+  });
 
-  camera.position.set(3, 4, 5);
+  const skeleton = new THREE.Mesh(skeletonGeometry, skeletonMetaerial);
 
-  camera.lookAt(cube.position);
+  sceen.add(cube, skeleton);
+
+  camera.position.z = 5;
+
+  // camera.lookAt(cube.position); // 카메라가 대상을 바라보게 함
 
   // 기본 조명을 추가
-  const directionalLight = new THREE.DirectionalLight(0xf0f0f0, 1);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(-1, 2, 3);
 
   sceen.add(directionalLight);
 
-  // 은은한 조명을 추가
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
-  ambientLight.position.set(3, 2, 1);
-  sceen.add(ambientLight);
-
   const clock = new THREE.Clock();
 
   const render = () => {
-    cube.rotation.x = clock.getElapsedTime(); // x 축 방향으로 돌리는 것 단위는 라디안
+    const elapsedTime = clock.getElapsedTime();
+
+    cube.rotation.x = elapsedTime; // x 축 방향으로 돌리는 것 단위는 라디안
+    cube.rotation.y = elapsedTime;
+
+    skeleton.rotation.x = elapsedTime * 1.5;
+    skeleton.rotation.y = elapsedTime * 1.5;
     // cube.position.y = Math.sin(cube.rotation.x);
     // cube.scale.x = Math.cos(cube.rotation.x);
 
