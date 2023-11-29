@@ -1,7 +1,12 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import GUI from "lil-gui";
 
 const init = () => {
+  const options = {
+    color: 0xffffff,
+  };
+
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
@@ -28,7 +33,7 @@ const init = () => {
   controls.enableZoom = true; // 카메라 줌 여부
   // controls.maxDistance = 50; // 카메라 최대 확대
   // controls.minDistance = 10; // 카메라 최소 확대
-  controls.maxAzimuthAngle = Math.PI / 2; // 카메라 회전 크기\
+  controls.maxAzimuthAngle = Math.PI / 2; // 카메라 회전 범위
   controls.minAzimuthAngle = Math.PI / 3;
 
   controls.enablePan = true; // 우클릭 카메라 전환 여부
@@ -96,6 +101,16 @@ const init = () => {
   };
 
   window.addEventListener("resize", handleResize);
+
+  const gui = new GUI();
+  //제어할 대상, 변경할 값, 최소, 최대, 변동 step 값
+  gui.add(cube.position, "y", -3, 3, 0.1);
+
+  gui.add(cube, "visible");
+
+  gui.addColor(options, "color").onChange((value) => {
+    cube.material.color.set(value);
+  });
 };
 
 window.addEventListener("load", () => {
