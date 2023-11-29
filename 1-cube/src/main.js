@@ -40,7 +40,19 @@ const init = () => {
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
   ambientLight.position.set(3, 2, 1);
   sceen.add(ambientLight);
-  renderer.render(sceen, camera);
+
+  const clock = new THREE.Clock();
+
+  const render = () => {
+    cube.rotation.x = clock.getElapsedTime(); // x 축 방향으로 돌리는 것 단위는 라디안
+    // cube.position.y = Math.sin(cube.rotation.x);
+    // cube.scale.x = Math.cos(cube.rotation.x);
+
+    renderer.render(sceen, camera);
+    requestAnimationFrame(render);
+  };
+
+  render();
 
   const handleResize = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
