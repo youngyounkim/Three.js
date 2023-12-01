@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
+import typeface from "./assets/fonts/The Jamsil 3 Regular_Regular.json";
 
 const init = () => {
   const renderer = new THREE.WebGLRenderer({
@@ -20,15 +22,25 @@ const init = () => {
 
   camera.position.z = 5;
 
+  // Font
+  const fontLoader = new FontLoader();
+
+  // fontLoader.load(
+  //   "./assets/fonts/The Jamsil 3 Regular_Regular.json",
+  //   (font) => {
+  //     console.log(font);
+  //   },
+  //   (event) => {
+  //     console.log(event);
+  //   },
+  //   (error) => {
+  //     console.log(error);
+  //   }
+  // );
+
+  const font = fontLoader.parse(typeface);
+
   const render = () => {
-    // cube.rotation.x = elapsedTime; // x 축 방향으로 돌리는 것 단위는 라디안
-    // cube.rotation.y = elapsedTime;
-
-    // skeleton.rotation.x = elapsedTime * 1.5;
-    // skeleton.rotation.y = elapsedTime * 1.5;
-    // cube.position.y = Math.sin(cube.rotation.x);
-    // cube.scale.x = Math.cos(cube.rotation.x);
-
     renderer.render(sceen, camera);
     requestAnimationFrame(render);
   };
