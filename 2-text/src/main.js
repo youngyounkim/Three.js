@@ -45,7 +45,7 @@ const init = async () => {
     bevelThickness: 0.02,
   });
 
-  const textMaterial = new THREE.MeshPhongMaterial({ color: 0x00c896 });
+  const textMaterial = new THREE.MeshPhongMaterial();
 
   const text = new THREE.Mesh(textGeometry, textMaterial);
 
@@ -61,9 +61,15 @@ const init = async () => {
 
   textGeometry.center();
 
+  const textureLoader = new THREE.TextureLoader().setPath("./assets/textures/");
+
+  const textTexture = textureLoader.load("holographic.jpeg");
+
+  textMaterial.map = textTexture;
+
   scene.add(text);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 
   scene.add(ambientLight);
   // const font = fontLoader.parse(typeface);
