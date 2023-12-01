@@ -4,7 +4,7 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import GUI from "lil-gui";
 
-const init = () => {
+const init = async () => {
   const gui = new GUI();
 
   const renderer = new THREE.WebGLRenderer({
@@ -31,24 +31,37 @@ const init = () => {
   // Font
   const fontLoader = new FontLoader();
 
-  let textGeometry, textMaterial;
-
-  fontLoader.load(
-    "./assets/fonts/The Jamsil 3 Regular_Regular.json",
-    (font) => {
-      textGeometry = new TextGeometry("안녕하세요", {
-        font,
-        size: 0.5,
-        height: 0.1,
-      });
-
-      textMaterial = new THREE.MeshPhongMaterial({ color: 0x00c896 });
-
-      const text = new THREE.Mesh(textGeometry, textMaterial);
-
-      scene.add(text);
-    }
+  const font = await fontLoader.loadAsync(
+    "./assets/fonts/The Jamsil 3 Regular_Regular.json"
   );
+
+  const textGeometry = new TextGeometry("안녕하세요", {
+    font,
+    size: 0.5,
+    height: 0.1,
+    bevelEnabled: true,
+    bevelSegments: 5,
+    bevelSize: 0.02,
+    bevelThickness: 0.02,
+  });
+
+  const textMaterial = new THREE.MeshPhongMaterial({ color: 0x00c896 });
+
+  const text = new THREE.Mesh(textGeometry, textMaterial);
+
+  // 바운딩 박스 계산을 실행시켜 element의 크기를 계산
+  // min, max 값이 나오는데 각각 바운딩 박스의 시작과 끝을 의미
+  // textGeometry.computeBoundingBox();
+
+  // textGeometry.translate(
+  //   -(textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x) * 0.5,
+  //   -(textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y) * 0.5,
+  //   -(textGeometry.boundingBox.max.z - textGeometry.boundingBox.min.z) * 0.5
+  // );
+
+  textGeometry.center();
+
+  scene.add(text);
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 
@@ -56,11 +69,10 @@ const init = () => {
   // const font = fontLoader.parse(typeface);
 
   const pointLight = new THREE.PointLight(0xffffff, 0.5);
-  const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.5);
 
   pointLight.position.set(3, 0, 2);
 
-  scene.add(pointLight, pointLightHelper);
+  scene.add(pointLight);
 
   gui.add(pointLight.position, "x").min(-3).max(3).step(0.1);
 
