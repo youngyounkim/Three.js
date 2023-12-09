@@ -24,7 +24,7 @@ const init = async () => {
     500
   );
 
-  camera.position.z = 5;
+  camera.position.set(0, 1, 5);
 
   new OrbitControls(camera, renderer.domElement);
 
@@ -35,7 +35,7 @@ const init = async () => {
     "./assets/fonts/The Jamsil 3 Regular_Regular.json"
   );
 
-  const textGeometry = new TextGeometry("안녕하세요", {
+  const textGeometry = new TextGeometry("안녕하세요 만나서 반갑습니다", {
     font,
     size: 0.5,
     height: 0.1,
@@ -69,21 +69,69 @@ const init = async () => {
 
   scene.add(text);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  const planeGeometry = new THREE.PlaneGeometry(2000, 2000);
+  const planeMaterial = new THREE.MeshPhongMaterial({ color: 0x00000f });
+
+  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+  plane.position.z = -2;
+
+  scene.add(plane);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 
   scene.add(ambientLight);
   // const font = fontLoader.parse(typeface);
 
-  const pointLight = new THREE.PointLight(0xffffff, 0.5);
+  // 색상, 각도, 거리, 빛이 퍼지는 각도, 빛의 감쇠하는 정도, 빛이 거리에 따라 어두워 지는가
+  const spotLight = new THREE.SpotLight(
+    0xffffff,
+    2.5,
+    30,
+    Math.PI * 0.15,
+    0.2,
+    0.5
+  );
 
-  pointLight.position.set(3, 0, 2);
+  spotLight.position.set(0, 0, 3);
+  // 어떤 대상을 기준으로 빛을 쏠 것인가는 target 속성에 있음
+  spotLight.target.position.set(0, 0, -3);
 
-  scene.add(pointLight);
+  scene.add(spotLight);
 
-  gui.add(pointLight.position, "x").min(-3).max(3).step(0.1);
+  const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+
+  scene.add(spotLightHelper);
+
+  // 폴더화 해서 여러 옵션을 관리 할 수 있다.
+  const spotLitghtFolder = gui.addFolder("SpotLight");
+
+  spotLitghtFolder
+    .add(spotLight, "angle")
+    .min(0)
+    .max(Math.PI / 2)
+    .step(0.01);
+
+  spotLitghtFolder
+    .add(spotLight.position, "z")
+    .min(1)
+    .max(10)
+    .step(0.01)
+    .name("position.z");
+
+  spotLitghtFolder.add(spotLight, "distance").min(1).max(30).step(0.01);
+
+  // 빛과 거리
+  spotLitghtFolder.add(spotLight, "decay").min(0).max(10).step(0.01);
+
+  // 빛의 경계
+  spotLitghtFolder.add(spotLight, "penumbra").min(0).max(1).step(0.01);
 
   const render = () => {
     renderer.render(scene, camera);
+
+    spotLightHelper.update();
+
     requestAnimationFrame(render);
   };
 
