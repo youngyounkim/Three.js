@@ -95,13 +95,15 @@ const init = async () => {
 
   spotLight.position.set(0, 0, 3);
   // 어떤 대상을 기준으로 빛을 쏠 것인가는 target 속성에 있음
-  spotLight.target.position.set(0, 0, -3);
 
-  scene.add(spotLight);
+  scene.add(spotLight, spotLight.target);
 
-  const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+  window.addEventListener("mousemove", (e) => {
+    const mouseX = (e.clientX / window.innerWidth - 0.5) * 5;
+    const mouseY = -(e.clientY / window.innerHeight - 0.5) * 5;
 
-  scene.add(spotLightHelper);
+    spotLight.target.position.set(mouseX, mouseY, -3);
+  });
 
   // 폴더화 해서 여러 옵션을 관리 할 수 있다.
   const spotLitghtFolder = gui.addFolder("SpotLight");
@@ -129,8 +131,6 @@ const init = async () => {
 
   const render = () => {
     renderer.render(scene, camera);
-
-    spotLightHelper.update();
 
     requestAnimationFrame(render);
   };
