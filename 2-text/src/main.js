@@ -11,6 +11,9 @@ const init = async () => {
     antialias: true,
   });
 
+  // 그림자 사용 여부
+  renderer.shadowMap.enabled = true;
+
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   document.body.appendChild(renderer.domElement);
@@ -49,6 +52,8 @@ const init = async () => {
 
   const text = new THREE.Mesh(textGeometry, textMaterial);
 
+  text.castShadow = true;
+
   // 바운딩 박스 계산을 실행시켜 element의 크기를 계산
   // min, max 값이 나오는데 각각 바운딩 박스의 시작과 끝을 의미
   // textGeometry.computeBoundingBox();
@@ -75,6 +80,7 @@ const init = async () => {
   const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
   plane.position.z = -2;
+  plane.receiveShadow = true;
 
   scene.add(plane);
 
@@ -93,9 +99,14 @@ const init = async () => {
     0.5
   );
 
-  spotLight.position.set(0, 0, 3);
-  // 어떤 대상을 기준으로 빛을 쏠 것인가는 target 속성에 있음
+  spotLight.castShadow = true;
+  spotLight.shadow.mapSize.width = 1024;
+  spotLight.shadow.mapSize.height = 1024;
+  spotLight.shadow.radius = 10;
 
+  spotLight.position.set(0, 0, 3);
+
+  // 어떤 대상을 기준으로 빛을 쏠 것인가는 target 속성에 있음
   scene.add(spotLight, spotLight.target);
 
   window.addEventListener("mousemove", (e) => {
@@ -128,6 +139,13 @@ const init = async () => {
 
   // 빛의 경계
   spotLitghtFolder.add(spotLight, "penumbra").min(0).max(1).step(0.01);
+
+  spotLitghtFolder
+    .add(spotLight.shadow, "radius")
+    .min(1)
+    .max(20)
+    .step(0.01)
+    .name("shadow.radius");
 
   const render = () => {
     renderer.render(scene, camera);
