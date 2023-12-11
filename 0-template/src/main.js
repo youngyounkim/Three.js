@@ -9,7 +9,7 @@ const init = () => {
 
   document.body.appendChild(renderer.domElement);
 
-  const sceen = new THREE.Scene();
+  const scene = new THREE.Scene();
   // 시야각,  ,얼마나 가까이, 얼마나 멀리
   const camera = new THREE.PerspectiveCamera(
     75,
@@ -29,7 +29,7 @@ const init = () => {
     // cube.position.y = Math.sin(cube.rotation.x);
     // cube.scale.x = Math.cos(cube.rotation.x);
 
-    renderer.render(sceen, camera);
+    renderer.render(scene, camera);
     requestAnimationFrame(render);
   };
 
@@ -40,7 +40,7 @@ const init = () => {
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.render(sceen, camera);
+    renderer.render(scene, camera);
   };
 
   window.addEventListener("resize", handleResize);
