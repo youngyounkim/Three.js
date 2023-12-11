@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import Card from "./Card";
 
 const init = () => {
   const renderer = new THREE.WebGLRenderer({
@@ -14,14 +15,6 @@ const init = () => {
 
   const sceen = new THREE.Scene();
 
-  // const textureLoader = new THREE.TextureLoader();
-
-  // const texture = textureLoader.load(
-  //   "https://i.namu.wiki/i/ReWo7bzwqQ7mqfeZBNIn43LxH8t9-fUdgLj_VZtMqjg55xsnWBAosEpYhkPDfEP8rGE2DBtNo9CZ1LdwfE8jbw.webp"
-  // );
-
-  // sceen.background = texture;
-
   // 시야각,  ,얼마나 가까이, 얼마나 멀리
   const camera = new THREE.PerspectiveCamera(
     75,
@@ -30,7 +23,17 @@ const init = () => {
     500
   );
 
-  camera.position.z = 5;
+  camera.position.z = 25;
+
+  const card = new Card({ width: 10, height: 15.8, color: "#0077ff" });
+
+  sceen.add(card.mesh);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+
+  ambientLight.position.set(-5, -5, -5);
+
+  sceen.add(ambientLight);
 
   const render = () => {
     renderer.render(sceen, camera);
