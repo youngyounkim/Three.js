@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Card from "./Card";
 
 const init = () => {
@@ -24,6 +25,8 @@ const init = () => {
   );
 
   camera.position.z = 25;
+
+  const controls = new OrbitControls(camera, renderer.domElement);
 
   const card = new Card({ width: 10, height: 15.8, color: "#0077ff" });
 
