@@ -106,6 +106,10 @@ const init = async () => {
 
   spotLight.position.set(0, 0, 3);
 
+  const spotLightTexture = textureLoader.load("gradient.jpg");
+
+  spotLight.map = spotLightTexture;
+
   // 어떤 대상을 기준으로 빛을 쏠 것인가는 target 속성에 있음
   scene.add(spotLight, spotLight.target);
 
