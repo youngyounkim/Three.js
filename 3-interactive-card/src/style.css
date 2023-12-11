@@ -7,3 +7,26 @@ body {
 * {
   box-sizing: border-box;
 }
+
+.container {
+  position: absolute;
+  left: 50%;
+  bottom: 64px;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 16px;
+}
+
+.container button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.container button:not(:first-child) {
+  margin-left: 16px;
+}

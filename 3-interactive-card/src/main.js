@@ -5,6 +5,9 @@ import Card from "./Card";
 
 const init = () => {
   const gui = new GUI();
+
+  const colors = ["#ff6e6e", "#31e0c1", "#006fff", "#ffd732"];
+
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true, // 랜더러 배경을 투명하게
@@ -42,7 +45,7 @@ const init = () => {
     width: 10,
     height: 15.8,
     radius: 0.5,
-    color: "#0077ff",
+    color: colors[0],
   });
 
   card.mesh.rotation.z = Math.PI * 0.1;
@@ -96,6 +99,19 @@ const init = () => {
   };
 
   window.addEventListener("resize", handleResize);
+
+  const container = document.querySelector(".container");
+
+  colors.forEach((color) => {
+    const button = document.createElement("button");
+
+    button.style.backgroundColor = color;
+    button.addEventListener("click", () => {
+      card.mesh.material.color = new THREE.Color(color);
+    });
+
+    container.appendChild(button);
+  });
 };
 
 window.addEventListener("load", () => {
