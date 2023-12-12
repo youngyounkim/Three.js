@@ -10,6 +10,8 @@ const init = async () => {
 
   const params = {
     waveColor: "#00ffff",
+    backgroundColor: "#ffffff",
+    fogColor: "#f0f0f0",
   };
 
   const canvas = document.querySelector("#canvas");
@@ -150,12 +152,43 @@ const init = async () => {
 
   window.addEventListener("resize", handleResize);
 
-  gsap.to(params, {
+  gui.hide();
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".wrapper",
+      start: "top top",
+      markers: true,
+      scrub: true,
+    },
+  });
+
+  tl.to(params, {
     waveColor: "#4268ff",
     onUpdate: () => {
       waveMaterial.color = new THREE.Color(params.waveColor);
     },
-  });
+  })
+    .to(
+      params,
+      {
+        backgroundColor: "#2a2a2a",
+        onUpdate: () => {
+          scene.background = new THREE.Color(params.backgroundColor);
+        },
+      },
+      "<"
+    )
+    .to(
+      params,
+      {
+        fogColor: "#2f2f2f",
+        onUpdate: () => {
+          scene.fog.color = new THREE.Color(params.fogColor);
+        },
+      },
+      "<"
+    );
 };
 
 window.addEventListener("load", () => {
