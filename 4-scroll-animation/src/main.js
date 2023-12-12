@@ -12,6 +12,8 @@ const init = async () => {
     canvas,
   });
 
+  renderer.shadowMap.enabled = true;
+
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   const scene = new THREE.Scene();
@@ -41,6 +43,8 @@ const init = async () => {
   wave.rotation.x = -Math.PI / 2;
 
   scene.add(wave);
+
+  wave.receiveShadow = true;
 
   const waveHeight = 2.5;
 
@@ -73,6 +77,12 @@ const init = async () => {
 
   const ship = gltf.scene;
 
+  ship.traverse((el) => {
+    if (el.isMesh) {
+      el.castShadow = true;
+    }
+  });
+
   ship.scale.set(40, 40, 40);
 
   ship.rotation.y = Math.PI;
@@ -87,11 +97,21 @@ const init = async () => {
 
   const pointLight = new THREE.PointLight(0xffffff, 1);
 
+  pointLight.castShadow = true;
+  pointLight.shadow.mapSize.width = 1024;
+  pointLight.shadow.mapSize.height = 1024;
+  pointLight.shadow.radius = 10;
+
   pointLight.position.set(15, 15, 15);
 
   scene.add(pointLight);
 
   const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+
+  directionalLight.castShadow = true;
+  directionalLight.shadow.mapSize.width = 1024;
+  directionalLight.shadow.mapSize.height = 1024;
+  directionalLight.shadow.radius = 10;
 
   directionalLight.position.set(-15, 15, 15);
 
