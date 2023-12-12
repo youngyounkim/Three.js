@@ -12,7 +12,7 @@ const init = () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   const scene = new THREE.Scene();
-  // 시야각,  ,얼마나 가까이, 얼마나 멀리
+
   const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -20,7 +20,34 @@ const init = () => {
     500
   );
 
-  camera.position.z = 5;
+  camera.position.set(0, 25, 150);
+
+  const waveGeometry = new THREE.PlaneGeometry(1500, 1500, 150, 150);
+  const waveMaterial = new THREE.MeshStandardMaterial({
+    color: "#00ffff",
+  });
+
+  const wave = new THREE.Mesh(waveGeometry, waveMaterial);
+
+  wave.rotation.x = -Math.PI / 2;
+
+  scene.add(wave);
+
+  const waveHeight = 2.5;
+
+  for (let i = 0; i < waveGeometry.attributes.position.count; i++) {
+    const z =
+      waveGeometry.attributes.position.getZ(i) +
+      (Math.random() - 0.5) * waveHeight;
+
+    waveGeometry.attributes.position.setZ(i, z);
+  }
+
+  const pointLight = new THREE.PointLight("#FFF000", 1);
+
+  pointLight.position.set(15, 15, 15);
+
+  scene.add(pointLight);
 
   const render = () => {
     renderer.render(scene, camera);
