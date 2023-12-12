@@ -1,8 +1,17 @@
 import * as THREE from "three";
 import { GUI } from "lil-gui";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const init = async () => {
+  // 스크롤 이벤트를 쉽게 하기 위해 트리거를 호출
+  gsap.registerPlugin(ScrollTrigger);
+
+  const params = {
+    waveColor: "#00ffff",
+  };
+
   const canvas = document.querySelector("#canvas");
   const gui = new GUI();
 
@@ -18,11 +27,11 @@ const init = async () => {
 
   const scene = new THREE.Scene();
 
-  scene.fog = new THREE.FogExp2(0xf0f0f0, 0.005);
+  scene.fog = new THREE.Fog(0xf0f0f0, 0.1, 500);
 
-  // gui.add(scene.fog, "near").min(0).max(100).step(0.1);
+  gui.add(scene.fog, "near").min(0).max(100).step(0.1);
 
-  // gui.add(scene.fog, "far").min(100).max(500).step(0.1);
+  gui.add(scene.fog, "far").min(100).max(500).step(0.1);
 
   const camera = new THREE.PerspectiveCamera(
     75,
@@ -35,7 +44,7 @@ const init = async () => {
 
   const waveGeometry = new THREE.PlaneGeometry(1500, 1500, 150, 150);
   const waveMaterial = new THREE.MeshStandardMaterial({
-    color: "#00ffff",
+    color: params.waveColor,
   });
 
   const wave = new THREE.Mesh(waveGeometry, waveMaterial);
@@ -140,6 +149,13 @@ const init = async () => {
   };
 
   window.addEventListener("resize", handleResize);
+
+  gsap.to(params, {
+    waveColor: "#4268ff",
+    onUpdate: () => {
+      waveMaterial.color = new THREE.Color(params.waveColor);
+    },
+  });
 };
 
 window.addEventListener("load", () => {
