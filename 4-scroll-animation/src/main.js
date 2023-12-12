@@ -1,7 +1,9 @@
 import * as THREE from "three";
+import { GUI } from "lil-gui";
 
 const init = () => {
   const canvas = document.querySelector("#canvas");
+  const gui = new GUI();
 
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -12,6 +14,12 @@ const init = () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   const scene = new THREE.Scene();
+
+  scene.fog = new THREE.FogExp2(0xf0f0f0, 0.005);
+
+  // gui.add(scene.fog, "near").min(0).max(100).step(0.1);
+
+  // gui.add(scene.fog, "far").min(100).max(500).step(0.1);
 
   const camera = new THREE.PerspectiveCamera(
     75,
@@ -43,11 +51,17 @@ const init = () => {
     waveGeometry.attributes.position.setZ(i, z);
   }
 
-  const pointLight = new THREE.PointLight("#FFF000", 1);
+  const pointLight = new THREE.PointLight(0xffffff, 1);
 
   pointLight.position.set(15, 15, 15);
 
   scene.add(pointLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+
+  directionalLight.position.set(-15, 15, 15);
+
+  scene.add(directionalLight);
 
   const render = () => {
     renderer.render(scene, camera);
