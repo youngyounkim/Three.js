@@ -158,7 +158,7 @@ const init = async () => {
     scrollTrigger: {
       trigger: ".wrapper",
       start: "top top",
-      markers: true,
+      end: "bottom bottom",
       scrub: true,
     },
   });
@@ -168,6 +168,7 @@ const init = async () => {
     onUpdate: () => {
       waveMaterial.color = new THREE.Color(params.waveColor);
     },
+    duration: 1.5,
   })
     .to(
       params,
@@ -176,6 +177,7 @@ const init = async () => {
         onUpdate: () => {
           scene.background = new THREE.Color(params.backgroundColor);
         },
+        duration: 1.5,
       },
       "<"
     )
@@ -186,9 +188,41 @@ const init = async () => {
         onUpdate: () => {
           scene.fog.color = new THREE.Color(params.fogColor);
         },
+        duration: 1.5,
       },
       "<"
-    );
+    )
+    .to(camera.position, {
+      x: 100,
+      z: -50,
+      duration: 2.5,
+    })
+    .to(ship.position, {
+      z: 150,
+      duration: 2,
+    })
+    .to(camera.position, {
+      x: -50,
+      y: 25,
+      z: 100,
+      duration: 2,
+    })
+    .to(camera.position, {
+      x: 0,
+      y: 50,
+      z: 300,
+      duration: 2, // 전체 애니메이션에서 실행될 비율 duration 총합이 10 이면 20퍼센트를 차지
+    });
+
+  gsap.to(".title", {
+    opacity: 0,
+    scrollTrigger: {
+      trigger: ".wrapper",
+      scrub: true,
+      pin: true,
+      end: "+=1000",
+    },
+  });
 };
 
 window.addEventListener("load", () => {
