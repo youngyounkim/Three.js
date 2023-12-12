@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { GUI } from "lil-gui";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-const init = () => {
+const init = async () => {
   const canvas = document.querySelector("#canvas");
   const gui = new GUI();
 
@@ -66,6 +67,24 @@ const init = () => {
     waveGeometry.attributes.position.needsUpdate = true;
   };
 
+  const gltfLoader = new GLTFLoader();
+
+  const gltf = await gltfLoader.loadAsync("./models/ship/scene.gltf");
+
+  const ship = gltf.scene;
+
+  ship.scale.set(40, 40, 40);
+
+  ship.rotation.y = Math.PI;
+
+  ship.update = () => {
+    const elapsedTime = clock.getElapsedTime();
+
+    ship.position.y = Math.sin(elapsedTime * 3);
+  };
+
+  scene.add(ship);
+
   const pointLight = new THREE.PointLight(0xffffff, 1);
 
   pointLight.position.set(15, 15, 15);
@@ -82,6 +101,9 @@ const init = () => {
 
   const render = () => {
     wave.update();
+    ship.update();
+
+    camera.lookAt(ship.position);
 
     renderer.render(scene, camera);
     requestAnimationFrame(render);
