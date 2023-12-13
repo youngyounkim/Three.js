@@ -28,19 +28,26 @@ const init = () => {
   const count = 1000;
 
   const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
 
   for (let i = 0; i < count; i++) {
     positions[i * 3] = THREE.MathUtils.randFloatSpread(10); //  Math.random() - 0.5 과 결과값이 같음
     positions[i * 3 + 1] = THREE.MathUtils.randFloatSpread(10);
     positions[i * 3 + 2] = THREE.MathUtils.randFloatSpread(10);
+
+    colors[i * 3] = Math.random();
+    colors[i * 3 + 1] = Math.random();
+    colors[i * 3 + 2] = Math.random();
   }
 
   const material = new THREE.PointsMaterial({
     color: 0xccaaff,
     size: 0.1,
+    vertexColors: true,
   });
 
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
   const textureLoader = new THREE.TextureLoader();
 
