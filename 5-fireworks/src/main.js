@@ -17,10 +17,10 @@ const init = () => {
     75,
     window.innerWidth / window.innerHeight,
     1,
-    500
+    10000
   );
 
-  camera.position.z = 5;
+  camera.position.z = 8000;
 
   new OrbitControls(camera, renderer.domElement);
 
@@ -29,6 +29,8 @@ const init = () => {
   scene.add(firework.points);
 
   const render = () => {
+    firework.update();
+
     renderer.render(scene, camera);
     requestAnimationFrame(render);
   };
