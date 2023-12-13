@@ -24,12 +24,24 @@ const init = () => {
 
   new OrbitControls(camera, renderer.domElement);
 
+  const fireworks = [];
+
+  fireworks.update = function () {
+    for (let i = 0; i < this.length; i++) {
+      const firework = fireworks[i];
+
+      firework.update();
+    }
+  };
+
   const firework = new FireWork({ x: 0, y: 0 });
 
   scene.add(firework.points);
 
+  fireworks.push(firework);
+
   const render = () => {
-    firework.update();
+    fireworks.update();
 
     renderer.render(scene, camera);
     requestAnimationFrame(render);
@@ -38,6 +50,8 @@ const init = () => {
   render();
 
   const handleResize = () => {
+    fireworks.update();
+
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
@@ -46,6 +60,20 @@ const init = () => {
   };
 
   window.addEventListener("resize", handleResize);
+
+  function handleMouseDown() {
+    const firework = new FireWork({
+      x: THREE.MathUtils.randFloatSpread(8000),
+      y: THREE.MathUtils.randFloatSpread(8000),
+      z: THREE.MathUtils.randFloatSpread(8000),
+    });
+
+    scene.add(firework.points);
+
+    fireworks.push(firework);
+  }
+
+  window.addEventListener("mousedown", handleMouseDown);
 };
 
 window.addEventListener("load", () => {

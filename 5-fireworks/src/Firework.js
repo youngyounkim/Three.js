@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 class FireWork {
-  constructor({ x, y }) {
+  constructor({ x, y, z }) {
     const count = 1000 + Math.round(Math.random() * 5000);
     const velocity = 10 + Math.random() * 10;
 
@@ -10,7 +10,7 @@ class FireWork {
     this.particles = [];
 
     for (let i = 0; i < count; i++) {
-      const particle = new THREE.Vector3(x, y, 0);
+      const particle = new THREE.Vector3(x, y, z);
 
       particle.theta = Math.random() * Math.PI * 2;
       particle.phi = Math.random() * Math.PI * 2;
