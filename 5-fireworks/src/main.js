@@ -25,22 +25,30 @@ const init = () => {
 
   const geometry = new THREE.SphereGeometry();
 
-  const count = 10000;
+  const count = 1000;
 
   const positions = new Float32Array(count * 3);
 
   for (let i = 0; i < count; i++) {
-    positions[i * 3] = THREE.MathUtils.randFloatSpread(1); //  Math.random() - 0.5 과 결과값이 같음
-    positions[i * 3 + 1] = THREE.MathUtils.randFloatSpread(1);
-    positions[i * 3 + 2] = THREE.MathUtils.randFloatSpread(1);
+    positions[i * 3] = THREE.MathUtils.randFloatSpread(10); //  Math.random() - 0.5 과 결과값이 같음
+    positions[i * 3 + 1] = THREE.MathUtils.randFloatSpread(10);
+    positions[i * 3 + 2] = THREE.MathUtils.randFloatSpread(10);
   }
 
   const material = new THREE.PointsMaterial({
     color: 0xccaaff,
-    size: 0.01,
+    size: 0.1,
   });
 
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+  const textureLoader = new THREE.TextureLoader();
+
+  const texture = textureLoader.load("./assets/textures/particle.png");
+
+  material.alphaMap = texture;
+  material.transparent = true;
+  material.depthWrite = false;
 
   const points = new THREE.Points(geometry, material);
 
