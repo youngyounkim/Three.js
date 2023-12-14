@@ -20,13 +20,39 @@ const init = () => {
   );
 
   camera.position.z = 5;
-
   const controls = new OrbitControls(camera, renderer.domElement);
+  /** 큐브 텍스처 활용 */
 
-  controls.minDistance = 5;
-  controls.maxDistance = 100;
+  // controls.minDistance = 5;
+  // controls.maxDistance = 100;
 
-  const textureLoader = new THREE.TextureLoader().setPath(
+  // const textureLoader = new THREE.TextureLoader().setPath(
+  //   "./assets/textures/Yokohama/"
+  // );
+
+  // const images = [
+  //   "posx.jpg",
+  //   "negx.jpg",
+  //   "posy.jpg",
+  //   "negy.jpg",
+  //   "posz.jpg",
+  //   "negz.jpg",
+  // ];
+
+  // const geometry = new THREE.BoxGeometry(5000, 5000, 5000);
+  // const materials = images.map(
+  //   (el) =>
+  //     new THREE.MeshBasicMaterial({
+  //       map: textureLoader.load(el),
+  //       side: THREE.BackSide,
+  //     })
+  // );
+
+  // const skybox = new THREE.Mesh(geometry, materials);
+
+  // scene.add(skybox);
+
+  const cubeTextureLoader = new THREE.CubeTextureLoader().setPath(
     "./assets/textures/Yokohama/"
   );
 
@@ -39,18 +65,9 @@ const init = () => {
     "negz.jpg",
   ];
 
-  const geometry = new THREE.BoxGeometry(5000, 5000, 5000);
-  const materials = images.map(
-    (el) =>
-      new THREE.MeshBasicMaterial({
-        map: textureLoader.load(el),
-        side: THREE.BackSide,
-      })
-  );
+  const cubeTexture = cubeTextureLoader.load(images);
 
-  const skybox = new THREE.Mesh(geometry, materials);
-
-  scene.add(skybox);
+  scene.background = cubeTexture;
 
   const render = () => {
     renderer.render(scene, camera);
