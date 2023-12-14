@@ -21,6 +21,12 @@ const init = () => {
 
   camera.position.z = 5;
   const controls = new OrbitControls(camera, renderer.domElement);
+
+  controls.enableZoom = false;
+  controls.enableDamping = true;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.5;
+
   /** 큐브 텍스처 활용 */
 
   // controls.minDistance = 5;
@@ -52,24 +58,35 @@ const init = () => {
 
   // scene.add(skybox);
 
-  const cubeTextureLoader = new THREE.CubeTextureLoader().setPath(
-    "./assets/textures/Yokohama/"
-  );
+  /** 배경을 이용한 3D 표현 */
 
-  const images = [
-    "posx.jpg",
-    "negx.jpg",
-    "posy.jpg",
-    "negy.jpg",
-    "posz.jpg",
-    "negz.jpg",
-  ];
+  // const cubeTextureLoader = new THREE.CubeTextureLoader().setPath(
+  //   "./assets/textures/Yokohama/"
+  // );
 
-  const cubeTexture = cubeTextureLoader.load(images);
+  // const images = [
+  //   "posx.jpg",
+  //   "negx.jpg",
+  //   "posy.jpg",
+  //   "negy.jpg",
+  //   "posz.jpg",
+  //   "negz.jpg",
+  // ];
 
-  scene.background = cubeTexture;
+  // const cubeTexture = cubeTextureLoader.load(images);
+
+  // scene.background = cubeTexture;
+
+  const textureLoader = new THREE.TextureLoader().setPath("./assets/textures/");
+
+  const texture = textureLoader.load("village.jpg");
+
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+
+  scene.background = texture;
 
   const render = () => {
+    controls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(render);
   };
