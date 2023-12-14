@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { GUI } from "lil-gui";
 
 const init = () => {
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
+
+  const gui = new GUI();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -19,7 +22,7 @@ const init = () => {
     10000
   );
 
-  camera.position.z = 5;
+  camera.position.z = 100;
   const controls = new OrbitControls(camera, renderer.domElement);
 
   controls.enableZoom = false;
@@ -84,6 +87,26 @@ const init = () => {
   texture.mapping = THREE.EquirectangularReflectionMapping;
 
   scene.background = texture;
+
+  const sphereGeometry = new THREE.SphereGeometry(30, 50, 50);
+  const sphereMaterial = new THREE.MeshBasicMaterial({ envMap: texture });
+
+  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+  scene.add(sphere);
+
+  gui
+    .add(texture, "mapping", {
+      Reflection: THREE.EquirectangularReflectionMapping,
+      Refraction: THREE.EquirectangularRefractionMapping,
+    })
+    .onChange(() => {
+      sphereMaterial.needsUpdate = true;
+    });
+
+  gui.add(sphereMaterial, "reflectivity").min(0).max(1).step(0.01);
+
+  gui.add(sphereMaterial, "refractionRatio").min(0).max(1).step(0.01);
 
   const render = () => {
     controls.update();
