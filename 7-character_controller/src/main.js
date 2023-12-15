@@ -1,6 +1,7 @@
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-const init = () => {
+const init = async () => {
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
@@ -18,17 +19,27 @@ const init = () => {
     500
   );
 
-  camera.position.z = 5;
+  camera.position.set(0, 5, 20);
+
+  const gltfLoader = new GLTFLoader();
+
+  const gltf = await gltfLoader.loadAsync("./models/character.gltf");
+
+  const model = gltf.scene;
+
+  model.scale.set(0.1, 0.1, 0.1);
+
+  scene.add(model);
+
+  camera.lookAt(model.position);
+
+  const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x333333);
+
+  hemisphereLight.position.set(0, 20, 10);
+
+  scene.add(hemisphereLight);
 
   const render = () => {
-    // cube.rotation.x = elapsedTime; // x 축 방향으로 돌리는 것 단위는 라디안
-    // cube.rotation.y = elapsedTime;
-
-    // skeleton.rotation.x = elapsedTime * 1.5;
-    // skeleton.rotation.y = elapsedTime * 1.5;
-    // cube.position.y = Math.sin(cube.rotation.x);
-    // cube.scale.x = Math.cos(cube.rotation.x);
-
     renderer.render(scene, camera);
     requestAnimationFrame(render);
   };
