@@ -21,7 +21,21 @@ const init = async () => {
 
   camera.position.set(0, 5, 20);
 
-  const gltfLoader = new GLTFLoader();
+  const loadingManager = new THREE.LoadingManager();
+
+  const progressBar = document.querySelector("#progress-bar");
+  const progressBarContainer = document.querySelector(
+    "#progress-bar-container"
+  );
+
+  loadingManager.onProgress = (url, loaded, total) => {
+    progressBar.value = (loaded / total) * 100;
+  };
+
+  loadingManager.onLoad = () => {
+    progressBarContainer.style.display = "none";
+  };
+  const gltfLoader = new GLTFLoader(loadingManager);
 
   const gltf = await gltfLoader.loadAsync("./models/character.gltf");
 
