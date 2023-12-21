@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const init = async () => {
   const renderer = new THREE.WebGLRenderer({
@@ -18,6 +19,14 @@ const init = async () => {
     1,
     500
   );
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+
+  controls.enableDamping = true;
+  controls.minDistance = 15;
+  controls.maxDistance = 25;
+  controls.minPolarAngle = Math.PI / 4;
+  controls.maxPolarAngle = Math.PI / 3;
 
   camera.position.set(0, 5, 20);
 
@@ -54,6 +63,8 @@ const init = async () => {
   scene.add(hemisphereLight);
 
   const render = () => {
+    controls.update();
+
     renderer.render(scene, camera);
     requestAnimationFrame(render);
   };
