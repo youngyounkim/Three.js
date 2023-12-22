@@ -90,8 +90,6 @@ const init = async () => {
     0.5
   );
 
-  const spotLightHelper = new THREE.SpotLightHelper(spotLight);
-
   spotLight.position.set(0, 20, 0);
 
   spotLight.castShadow = true;
@@ -100,10 +98,23 @@ const init = async () => {
   spotLight.shadow.radius = 8;
 
   scene.add(spotLight);
-  scene.add(spotLightHelper);
+
+  const mixer = new THREE.AnimationMixer(model);
+
+  const hasAnimaiton = gltf.animations.length !== 0;
+
+  if (hasAnimaiton) {
+    const action = mixer.clipAction(gltf.animations[0]);
+
+    action.play();
+  }
+  const clock = new THREE.Clock();
 
   const render = () => {
+    const delta = clock.getDelta();
     controls.update();
+
+    mixer.update(delta);
 
     renderer.render(scene, camera);
     requestAnimationFrame(render);
