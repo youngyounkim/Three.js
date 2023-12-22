@@ -131,6 +131,10 @@ const init = async () => {
 
     currentAction.play();
   }
+
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+
   const clock = new THREE.Clock();
 
   const render = () => {
@@ -154,6 +158,23 @@ const init = async () => {
   };
 
   window.addEventListener("resize", handleResize);
+
+  const handlePointerDown = (e) => {
+    pointer.x = (e.clientX / window.innerWidth - 0.5) * 2;
+    pointer.y = -(e.clientY / window.innerHeight - 0.5) * 2;
+
+    raycaster.setFromCamera(pointer, camera);
+
+    const intersects = raycaster.intersectObjects(scene.children);
+
+    const object = intersects[0]?.object;
+
+    if (object?.name === "Ch46") {
+      object.material.color.set(0x00aacc);
+    }
+  };
+
+  window.addEventListener("pointerdown", handlePointerDown);
 };
 
 window.addEventListener("load", () => {
