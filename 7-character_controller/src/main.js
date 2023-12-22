@@ -101,12 +101,35 @@ const init = async () => {
 
   const mixer = new THREE.AnimationMixer(model);
 
+  const buttons = document.querySelector(".actions");
+
+  let currentAction;
+
+  const combatAnimations = gltf.animations.slice(0, 5);
+
+  combatAnimations.forEach((animation) => {
+    const button = document.createElement("button");
+
+    button.innerHTML = animation.name;
+    buttons.appendChild(button);
+    button.addEventListener("click", () => {
+      const previusAction = currentAction;
+
+      currentAction = mixer.clipAction(animation);
+
+      if (previusAction !== currentAction) {
+        previusAction.fadeOut(0.5);
+        currentAction.reset().fadeIn(0.5).play();
+      }
+    });
+  });
+
   const hasAnimaiton = gltf.animations.length !== 0;
 
   if (hasAnimaiton) {
-    const action = mixer.clipAction(gltf.animations[0]);
+    currentAction = mixer.clipAction(gltf.animations[0]);
 
-    action.play();
+    currentAction.play();
   }
   const clock = new THREE.Clock();
 
