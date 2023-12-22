@@ -107,6 +107,8 @@ const init = async () => {
 
   const combatAnimations = gltf.animations.slice(0, 5);
 
+  const dancingAnimations = gltf.animations.slice(5);
+
   combatAnimations.forEach((animation) => {
     const button = document.createElement("button");
 
@@ -170,7 +172,29 @@ const init = async () => {
     const object = intersects[0]?.object;
 
     if (object?.name === "Ch46") {
-      object.material.color.set(0x00aacc);
+      const previusAction = currentAction;
+
+      const idx = Math.round(Math.random() * (dancingAnimations.length - 1));
+
+      currentAction = mixer.clipAction(dancingAnimations[idx]);
+
+      currentAction.loop = THREE.LoopOnce;
+      currentAction.clampWhenFinished = true; // 마지막 프레임에서 멈추도록 함
+
+      if (previusAction !== currentAction) {
+        previusAction.fadeOut(0.5);
+        currentAction.reset().fadeIn(0.5).play();
+      }
+      const handleFinished = () => {
+        const previusAction = currentAction;
+
+        currentAction = mixer.clipAction(combatAnimations[0]);
+
+        previusAction.fadeOut(0.5);
+        currentAction.reset().fadeIn(0.5).play();
+      };
+
+      mixer.addEventListener("finished", handleFinished);
     }
   };
 
